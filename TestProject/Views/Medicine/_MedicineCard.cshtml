@@ -1,0 +1,199 @@
+﻿@using TestProject.Models.Enums
+@model TestProject.Models.Medicine
+
+@{
+    var cardType = ViewData["CardType"]?.ToString() ?? "all";
+
+    var hasValidPrescription =
+        Model.Prescriptions?.Any(p => p.ExpirationDate >= DateTime.Today) == true;
+
+    var cardClass = cardType switch
+    {
+        "expiring" =>
+            "bg-white rounded-2xl p-5 shadow-sm border-l-4 border-amber-400 hover:shadow-lg hover:border-amber-500 transition-all duration-300 transform hover:-translate-y-1",
+
+        "running" =>
+            "bg-white rounded-2xl p-5 shadow-sm border-l-4 border-rose-400 hover:shadow-lg hover:border-rose-500 transition-all duration-300 transform hover:-translate-y-1",
+
+        _ =>
+            "group bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:border-teal-200 transform hover:-translate-y-1"
+    };
+
+    var iconContainerClass = cardType switch
+    {
+        "expiring" =>
+            "w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center",
+
+        "running" =>
+            "w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center",
+
+        _ =>
+            "w-12 h-12 bg-gradient-to-br from-sky-100 to-cyan-100 rounded-xl flex items-center justify-center group-hover:from-teal-100 group-hover:to-cyan-100 transition-colors"
+    };
+
+    var iconClass = cardType switch
+    {
+        "expiring" => "w-6 h-6 text-amber-500",
+        "running" => "w-6 h-6 text-rose-500",
+        _ => "w-6 h-6 text-teal-600"
+    };
+
+    var stockBadgeClass = cardType switch
+    {
+        "expiring" =>
+            "px-2.5 py-1 bg-amber-50 text-amber-600 text-xs font-semibold rounded-lg whitespace-nowrap",
+
+        "running" =>
+            Model.CurrentStockLevel == StockLevel.Empty
+                ? "px-2.5 py-1 bg-rose-50 text-rose-600 text-xs font-semibold rounded-lg whitespace-nowrap"
+                : "px-2.5 py-1 bg-amber-50 text-amber-600 text-xs font-semibold rounded-lg whitespace-nowrap",
+
+        _ =>
+            "px-2.5 py-1 bg-rose-50 text-rose-600 text-xs font-semibold rounded-lg whitespace-nowrap"
+    };
+
+}
+
+<div class="@cardClass">
+
+    <div class="flex items-center justify-between mb-4">
+
+        <div class="@iconContainerClass">
+            <svg class="@iconClass"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+
+                @if (cardType == "expiring")
+                {
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                }
+                else if (cardType == "running")
+                {
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                    </path>
+                }
+                else
+                {
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 01-1.806.547M8 4h8l-1 1v5.172a6 6 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A6 6 0 009 10.172V5L8 4z">
+                    </path>
+                }
+            </svg>
+        </div>
+
+        <div class="flex items-center gap-2">
+
+            <span class="@stockBadgeClass">
+                @Model.CurrentStockLevel.GetDisplayName()
+            </span>
+
+            <div class="relative">
+
+                <button type="button"
+                        data-open-menu="medicine-menu-@cardType-@Model.Id"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+
+                    <svg class="w-5 h-5"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <circle cx="12" cy="5" r="1.5" fill="currentColor"></circle>
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+                        <circle cx="12" cy="19" r="1.5" fill="currentColor"></circle>
+
+                    </svg>
+                </button>
+
+                <div id="medicine-menu-@cardType-@Model.Id"
+                     class="hidden absolute right-0 top-10 z-30 w-40 bg-white rounded-xl shadow-lg border border-slate-100 py-1">
+
+                    <button type="button"
+                            data-open-modal="editMedicineModal-@Model.Id"
+                            class="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                        Изменить
+                    </button>
+
+                    <form asp-controller="Medicine"
+                          asp-action="Delete"
+                          method="post"
+                          onsubmit="return confirm('Вы уверены, что хотите удалить лекарство?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 transition-colors">
+                            Удалить
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="font-bold text-slate-800 text-lg mb-2 line-clamp-1">
+        @Model.Name
+    </h3>
+
+    <div class="space-y-2 text-sm">
+
+        <div class="flex items-center gap-2 text-slate-600">
+            <span>@Model.Type.GetDisplayName()</span>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Dosage))
+        {
+            <div class="flex items-center gap-2 text-slate-600">
+                <span>@Model.Dosage</span>
+            </div>
+        }
+
+        <div class="flex items-center gap-2 text-slate-600">
+            <span>Срок годности: @Model.ExpirationDate.ToString("MM.yyyy")</span>
+        </div>
+
+        <div class="flex items-center gap-2 text-slate-600">
+            <span>Остаток: @Model.CurrentStockLevel.GetDisplayName()</span>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Purpose))
+        {
+            <div class="flex items-start gap-2 text-slate-500 mt-3 pt-3 border-t border-slate-100">
+                <span class="text-xs">@Model.Purpose</span>
+            </div>
+        }
+
+        @if (cardType == "expiring")
+        {
+            var daysLeft = (Model.ExpirationDate.Date - DateTime.Today).Days;
+
+            <p class="text-xs font-medium text-amber-600">
+                @(daysLeft > 0 ? $"Истекает через {daysLeft} дн." : "Срок годности истёк")
+            </p>
+        }
+
+        @if (Model.RequiresPrescription)
+        {
+            <p class="text-xs mt-2 @(hasValidPrescription ? "text-emerald-600" : "text-rose-600")">
+                @(hasValidPrescription ? "Рецепт действителен" : "Нужен рецепт")
+            </p>
+        }
+
+    </div>
+</div>

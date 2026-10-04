@@ -1,0 +1,270 @@
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@model TestProject.ViewModels.MedicineListViewModel
+@{
+    ViewData["Title"] = "Домашняя аптечка";
+}
+<header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-between gap-4">
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center shadow-md">
+                    <svg class="w-6 h-6 text-white"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a6 6 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                        </path>
+                    </svg>
+                </div>
+
+                <h1 class="text-xl font-bold text-teal-600 hidden sm:block">
+                    Аптечка
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button type="button"
+                        data-open-modal="addMedicineModal"
+                        class="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600 transition-colors shadow-md">
+
+                    <svg class="w-5 h-5"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 4v16m8-8H4">
+                        </path>
+                    </svg>
+
+                    <span>Добавить</span>
+                </button>
+
+                <div class="relative">
+                    <button type="button"
+                            id="profileButton"
+                            class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 text-white flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 transition-all"
+                            aria-expanded="false"
+                            aria-controls="profileMenu">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <circle cx="12" cy="7" r="3.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2">
+                            </circle>
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M4.5 20.25a7.5 7.5 0 0 1 15 0">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div id="profileMenu"
+                         class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+
+                        <div class="px-4 py-3 border-b border-slate-100">
+                            <p class="text-xs text-slate-400 mb-1">Вы вошли как</p>
+                            <p class="text-sm font-semibold text-slate-700 truncate">
+                                @User.Identity?.Name
+                            </p>
+                        </div>
+
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              method="post">
+
+                            <button type="submit"
+                                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-colors">
+
+                                <svg class="w-5 h-5 text-slate-400"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3-6 3 3m0 0-3 3m3-3H9">
+                                    </path>
+                                </svg>
+
+                                <span>Выйти</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <form method="get" asp-action="Index" class="mb-8">
+        <div class="relative flex items-center bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-slate-200 overflow-hidden">
+            <div class="pl-5 pr-2 text-slate-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchQuery"
+                   placeholder="Найти лекарство по названию, назначению..."
+                   class="w-full px-2 py-4 text-lg text-slate-700 placeholder-slate-400 bg-transparent outline-none" />
+
+            <button type="submit" class="m-2 px-8 py-3 bg-teal-500 text-white font-semibold text-lg rounded-xl hover:bg-teal-600 transition-colors whitespace-nowrap">
+                Найти
+            </button>
+        </div>
+    </form>
+
+    <section class="mb-10">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-1 h-8 bg-teal-500 rounded-full"></div>
+            <h2 class="text-2xl font-bold text-slate-700">Все лекарства</h2>
+            <span class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm font-medium">@Model.AllMedicines.Count</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var med in Model.AllMedicines)
+            {
+                @await Html.PartialAsync(
+                    "_MedicineCard",
+                    med,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["CardType"] = "all"
+                    }
+                )
+
+                    var editModel = Model.EditMedicineId == med.Id && Model.EditMedicine != null
+                        ? Model.EditMedicine
+                        : new TestProject.ViewModels.EditMedicineViewModel
+                        {
+                            MedicineId = med.Id,
+                            Name = med.Name,
+                            Type = med.Type,
+                            Dosage = med.Dosage,
+                            Purpose = med.Purpose,
+                            CurrentStockLevel = med.CurrentStockLevel,
+                            ExpirationMonth = med.ExpirationDate.Month,
+                            ExpirationYear = med.ExpirationDate.Year,
+                            RequiresPrescription = med.RequiresPrescription
+                        };
+
+                @await Html.PartialAsync(
+                    "_EditMedicineModal",
+                    editModel
+                )
+            }
+        </div>
+    </section>
+
+    <section class="mb-10">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-1 h-8 bg-amber-400 rounded-full"></div>
+            <h2 class="text-2xl font-bold text-slate-700">Истекает срок годности</h2>
+            <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">@Model.ExpiringSoon.Count</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var med in Model.ExpiringSoon)
+            {
+                @await Html.PartialAsync(
+                    "_MedicineCard",
+                    med,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["CardType"] = "expiring"
+                    }
+                )
+            }
+        </div>
+    </section>
+
+    <section>
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-1 h-8 bg-rose-400 rounded-full"></div>
+            <h2 class="text-2xl font-bold text-slate-700">Заканчиваются</h2>
+            <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-sm font-medium">@Model.RunningOut.Count</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var med in Model.RunningOut)
+            {
+                @await Html.PartialAsync(
+                    "_MedicineCard",
+                    med,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["CardType"] = "running"
+                    }
+                )
+            }
+        </div>
+    </section>
+</main>
+<button type="button">
+        data-open-modal="addMedicineModal"
+        class="sm:hidden fixed bottom-6 right-6 w-14 h-14 bg-teal-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-teal-600 transition-colors z-50"
+
+    <svg class="w-7 h-7"
+         fill="none"
+         stroke="currentColor"
+         viewBox="0 0 24 24">
+
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4">
+        </path>
+
+    </svg>
+
+</button>
+@await Html.PartialAsync(
+    "_AddMedicineModal",
+    Model.CreateMedicine
+)
+@if (Model.OpenCreateMedicineModal)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('addMedicineModal');
+
+            if (modal) {
+                window.openModal(modal);
+            }
+        });
+    </script>
+}
+@if (Model.EditMedicineId.HasValue)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById(
+                'editMedicineModal-@Model.EditMedicineId'
+            );
+
+            if (modal) {
+                window.openModal(modal);
+            }
+        });
+    </script>
+}
+

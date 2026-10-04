@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TestProject.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-area="Identity"
+          asp-page="/Account/Logout"
+          asp-route-returnUrl="@Url.Action("Index", "Medicine")"
+          method="post"
+          class="inline">
+
+        <button type="submit"
+                class="px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+            Выйти
+        </button>
+    </form>
+}
+else
+{
+    <a asp-area="Identity"
+       asp-page="/Account/Login"
+       class="px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+        Войти
+    </a>
+
+    <a asp-area="Identity"
+       asp-page="/Account/Register"
+       class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
+        Регистрация
+    </a>
+}

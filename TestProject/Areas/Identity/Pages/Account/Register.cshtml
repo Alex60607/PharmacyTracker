@@ -1,0 +1,181 @@
+﻿@page
+@model RegisterModel
+
+@{
+ViewData["Title"] = "Регистрация";
+}
+
+<div class="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-10"> <div class="w-full max-w-md">
+
+    <!-- Заголовок -->
+    <div class="text-center mb-8">
+        <div class="mx-auto w-16 h-16 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/30 mb-5">
+            <svg class="w-8 h-8 text-white"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 20.25a6.75 6.75 0 0113.5 0">
+                </path>
+            </svg>
+        </div>
+
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+            Создание аккаунта
+        </h1>
+
+        <p class="mt-2 text-slate-500">
+            Создайте аккаунт, чтобы управлять своей аптечкой
+        </p>
+    </div>
+
+    <!-- Карточка регистрации -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-7 sm:p-8">
+
+        <form id="registerForm"
+              asp-route-returnUrl="@Model.ReturnUrl"
+              method="post">
+
+            <!-- Общие ошибки -->
+            <div asp-validation-summary="ModelOnly"
+                 class="mb-5 rounded-xl bg-rose-50 border border-rose-100 px-4 py-3 text-sm text-rose-600"
+                 role="alert">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-5">
+                <label asp-for="Input.Email"
+                       class="block text-sm font-medium text-slate-600 mb-2">
+                    Электронная почта
+                </label>
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <svg class="w-5 h-5 text-slate-400"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <input asp-for="Input.Email"
+                           autocomplete="username"
+                           aria-required="true"
+                           placeholder="name@example.com"
+                           class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 outline-none transition-all focus:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                </div>
+
+                <span asp-validation-for="Input.Email"
+                      class="block mt-1.5 text-sm text-rose-600">
+                </span>
+            </div>
+
+            <!-- Пароль -->
+            <div class="mb-5">
+                <label asp-for="Input.Password"
+                       class="block text-sm font-medium text-slate-600 mb-2">
+                    Пароль
+                </label>
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <svg class="w-5 h-5 text-slate-400"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v2h8z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <input asp-for="Input.Password"
+                           type="password"
+                           autocomplete="new-password"
+                           aria-required="true"
+                           placeholder="Введите пароль"
+                           class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 outline-none transition-all focus:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                </div>
+
+                <span asp-validation-for="Input.Password"
+                      class="block mt-1.5 text-sm text-rose-600">
+                </span>
+            </div>
+
+            <!-- Подтверждение пароля -->
+            <div class="mb-6">
+                <label asp-for="Input.ConfirmPassword"
+                       class="block text-sm font-medium text-slate-600 mb-2">
+                    Подтверждение пароля
+                </label>
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <svg class="w-5 h-5 text-slate-400"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <input asp-for="Input.ConfirmPassword"
+                           type="password"
+                           autocomplete="new-password"
+                           aria-required="true"
+                           placeholder="Повторите пароль"
+                           class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 outline-none transition-all focus:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                </div>
+
+                <span asp-validation-for="Input.ConfirmPassword"
+                      class="block mt-1.5 text-sm text-rose-600">
+                </span>
+            </div>
+
+            <!-- Кнопка регистрации -->
+            <button id="registerSubmit"
+                    type="submit"
+                    class="w-full py-3.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-semibold hover:from-teal-600 hover:to-cyan-600 transition-all shadow-lg shadow-teal-500/30 hover:shadow-teal-500/40 active:scale-[0.99]">
+                Создать аккаунт
+            </button>
+
+            <!-- Переход ко входу -->
+            <div class="text-center mt-6 pt-6 border-t border-slate-100">
+                <span class="text-sm text-slate-500">
+                    Уже есть аккаунт?
+                </span>
+
+                <a asp-page="./Login"
+                   asp-route-returnUrl="@Model.ReturnUrl"
+                   class="text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors ml-1">
+                    Войти
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Подсказка -->
+    <p class="text-center text-xs text-slate-400 mt-6">
+        После регистрации вы сможете добавлять и отслеживать свои лекарства
+    </p>
+
+</div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

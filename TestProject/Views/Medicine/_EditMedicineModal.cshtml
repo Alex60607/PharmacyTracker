@@ -1,0 +1,233 @@
+﻿@using TestProject.Models.Enums
+@model TestProject.ViewModels.EditMedicineViewModel
+
+@{
+    var months = new List<SelectListItem>
+    {
+        new SelectListItem("Январь", "1"),
+        new SelectListItem("Февраль", "2"),
+        new SelectListItem("Март", "3"),
+        new SelectListItem("Апрель", "4"),
+        new SelectListItem("Май", "5"),
+        new SelectListItem("Июнь", "6"),
+        new SelectListItem("Июль", "7"),
+        new SelectListItem("Август", "8"),
+        new SelectListItem("Сентябрь", "9"),
+        new SelectListItem("Октябрь", "10"),
+        new SelectListItem("Ноябрь", "11"),
+        new SelectListItem("Декабрь", "12")
+    };
+
+    var currentYear = DateTime.Today.Year;
+
+    var years = Enumerable.Range(currentYear, 15)
+        .Select(y => new SelectListItem(y.ToString(), y.ToString()))
+        .ToList();
+}
+
+<div id="editMedicineModal-@Model.MedicineId"
+     class="js-modal hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+
+    <div class="js-modal-panel relative bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+
+        <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-teal-50 to-cyan-50">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
+                    <svg class="w-5 h-5 text-white"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-8.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 8.5-8.5z">
+                        </path>
+                    </svg>
+                </div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    Изменить лекарство
+                </h2>
+
+            </div>
+
+            <button data-close-modal
+                    type="button"
+                    class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+
+                <svg class="w-5 h-5"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12">
+                    </path>
+
+                </svg>
+
+            </button>
+
+        </div>
+
+        <form asp-controller="Medicine"
+              asp-action="Edit"
+              method="post"
+              class="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="MedicineId" type="hidden" />
+
+            <div>
+                <label asp-for="Name"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                    Название
+                </label>
+
+                <input asp-for="Name"
+                       type="text"
+                       class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+
+                <span asp-validation-for="Name"
+                      class="text-rose-600 text-sm block">
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+
+                <div>
+                    <label asp-for="Type"
+                           class="block text-sm font-medium text-slate-600 mb-1.5">
+                        Форма выпуска
+                    </label>
+
+                    <select asp-for="Type"
+                            asp-items="Html.GetEnumSelectList<MedicineType>()"
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+                    </select>
+
+                    <span asp-validation-for="Type"
+                          class="text-rose-600 text-sm block">
+                    </span>
+                </div>
+
+                <div>
+                    <label asp-for="Dosage"
+                           class="block text-sm font-medium text-slate-600 mb-1.5">
+                        Дозировка
+                    </label>
+
+                    <input asp-for="Dosage"
+                           type="text"
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+
+                    <span asp-validation-for="Dosage"
+                          class="text-rose-600 text-sm block">
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+
+                <div>
+                    <label asp-for="CurrentStockLevel"
+                           class="block text-sm font-medium text-slate-600 mb-1.5">
+                        Уровень запасов
+                    </label>
+
+                    <select asp-for="CurrentStockLevel"
+                            asp-items="Html.GetEnumSelectList<StockLevel>()"
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+                    </select>
+
+                    <span asp-validation-for="CurrentStockLevel"
+                          class="text-rose-600 text-sm block">
+                    </span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">
+                        Срок годности
+                    </label>
+
+                    <div class="flex gap-3">
+
+                        <select asp-for="ExpirationMonth"
+                                asp-items="months"
+                                class="w-1/2 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+                            <option value="">Месяц</option>
+                        </select>
+
+                        <select asp-for="ExpirationYear"
+                                asp-items="years"
+                                class="w-1/2 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all">
+                            <option value="">Год</option>
+                        </select>
+
+                    </div>
+
+                    <span asp-validation-for="ExpirationMonth"
+                          class="text-rose-600 text-sm block">
+                    </span>
+
+                    <span asp-validation-for="ExpirationYear"
+                          class="text-rose-600 text-sm block">
+                    </span>
+                </div>
+
+            </div>
+
+            <div>
+                <label asp-for="Purpose"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                    Назначение
+                </label>
+
+                <textarea asp-for="Purpose"
+                          rows="2"
+                          class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all resize-none"></textarea>
+
+                <span asp-validation-for="Purpose"
+                      class="text-rose-600 text-sm block">
+                </span>
+            </div>
+
+            <div>
+                <label asp-for="RequiresPrescription"
+                       class="inline-flex items-center gap-2 text-sm font-medium text-slate-600">
+
+                    <input asp-for="RequiresPrescription"
+                           type="checkbox"
+                           class="rounded border-slate-300 text-teal-500 focus:ring-teal-400">
+
+                    Требуется рецепт
+
+                </label>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+
+                <button type="submit"
+                        class="flex-1 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-medium hover:from-teal-600 hover:to-cyan-600 transition-all shadow-lg shadow-teal-500/30">
+                    Сохранить
+                </button>
+
+                <button type="button"
+                        data-close-modal
+                        class="px-6 py-3 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200 transition-all">
+                    Отмена
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
